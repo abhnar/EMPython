@@ -1,0 +1,7 @@
+set order 1
+load models\Iris_Filter_2
+set freq range 10.3 11.7 50
+simulate
+addplot s21db
+set grid on
+plot
