@@ -17,14 +17,18 @@ class MKL_sparse():
 
 
 	def __init__(self):
+		self.status = 1
 		try:
 			self.dll = cdll.LoadLibrary("./mkl/mklsolve.dll")
 			#self.dll = cdll.LoadLibrary("D:/del/mklsolve.dll")
 			
-
+			
 		except OSError as e:
-			print("Critical Error: Unable to load 'mklsolve.dll' file.")
-			sys.exit(1)
+			print("\nCritical Warning: Unable to load 'mklsolve.dll' file. Using Scipy sparse solver insted\n.")
+			#sys.exit(1)
+			self.status = 0
+			
+		
 	def solve_sym(self,A,b):
 		A = triu(A,format='csr')
 		if(A.dtype==np.complex128 ):

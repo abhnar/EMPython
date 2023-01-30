@@ -55,9 +55,9 @@ class fem_interactive:
 				obj.me = MeshEngine.MeshEngine()
 				obj.fname = cmd[1]
 			
-				obj.fname = (os.path.abspath(obj.fname));
+				obj.fname = (os.path.abspath(obj.fname))
 
-				obj.me.loadComsolMesh(obj.fname,report=obj.fname,verbose = 1);
+				obj.me.loadComsolMesh(obj.fname,report=obj.fname,verbose = 1)
 				obj.me.processMesh(verbose = False)
 				for nm in (obj.me.Mesh["domain_names"]):
 					obj.matmap[nm] = [1, 1, 0]
@@ -83,7 +83,7 @@ class fem_interactive:
 					print(obj.data.keys())
 			elif(cmd[0] == 'set'):
 				if(cmd[1].strip() == 'mat' or cmd[1].strip() == 'material'):
-					obj.matmap[cmd[2]] = [float(cmd[3]), float(cmd[4]), float(cmd[5])];
+					obj.matmap[cmd[2]] = [float(cmd[3]), float(cmd[4]), float(cmd[5])]
 					print("Set material", cmd[2])
 					
 				elif(cmd[1].strip() == 'freq' or cmd[1].strip() == 'frequency'):
@@ -98,10 +98,10 @@ class fem_interactive:
 						print("Invalid plottype. Should be eithr 'lin' or 'db'")
 				elif(cmd[1].strip() == 'grid'):
 					if cmd[2] == 'on':
-						obj.grid = True;
+						obj.grid = True
 						print("Grid On")
 					elif  cmd[2] == 'off':
-						obj.grid = False;
+						obj.grid = False
 						print("Grid Off")
 					else:
 						print("Invalid grid. Should be either 'on' or 'of'")
@@ -115,11 +115,11 @@ class fem_interactive:
 						print("Invalid order. Should be eithr '1' or '2'")
 
 			elif(cmd[0] == 'simulate'):
-				obj.fem.setMaterial(obj.matmap);
-				obj.fem.freq = obj.freq;
+				obj.fem.setMaterial(obj.matmap)
+				obj.fem.freq = obj.freq
 
 				obj.fem.calculateElementalMatrices()
-				ns = np.size(obj.freq);
+				ns = np.size(obj.freq)
 				obj.trans = np.zeros((ns,1),dtype = complex)
 				obj.ref = np.zeros((ns,1),dtype = complex)
 				obj.fem.assemble_system()
@@ -154,8 +154,8 @@ class fem_interactive:
 					for i in x:
 
 						if i.strip() == '' or i.startswith('%'):
-							continue;
-						y = i.split();
+							continue
+						y = i.split()
 						#print(y)
 						fr.append(float(y[0].strip()))
 						res.append(float(y[1].strip()))

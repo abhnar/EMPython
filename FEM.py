@@ -53,6 +53,7 @@ class FEM:
 		self.ELEMENTS.epsilonr = ones(self.Mesh["ntet"],dtype=np.float)
 		self.ELEMENTS.mur = ones(self.Mesh["ntet"],dtype=np.float)
 		self.ELEMENTS.sigma = ones(self.Mesh["ntet"],dtype=np.float)
+		self.mklsp = MKL_sparse()
 
 
 	def generateDof(self):
@@ -525,7 +526,7 @@ class FEM:
 		self.MATLAB = {"E":E,"F":F,"P":P,"C":C,"D":D,"b":b}
 
 	def solve_numeric_system_multimode(self,field,f):
-		mklsp = MKL_sparse();
+		self.mklsp = MKL_sparse();
 		
 		eta0 = 120*pi;
 		pecedge = self.DOF.pecdof
@@ -740,8 +741,13 @@ class FEM:
 
 		
 		#x= spsolveinterface(K,b,13)
-		x = mklsp.solve(K,b,mattype = 13)
+		if(self.mklsp.status == 1):
+			x = self.mklsp.solve(K,b,mattype = 13)
+		else:
+			x=sps.linalg.spsolve(K,b)
+
 		##print('Time : ',time.time()-start_time)
+		
 		t = x[0:nports]
 		#print(port_indices.keys())
 		#print("S21:(", port_indices['OP'],")", np.sum(x[port_indices['OP']]))
@@ -774,7 +780,7 @@ class FEM:
 		#return 0,0,0
 
 	def solve_numeric_system(self,f):
-		mklsp = MKL_sparse()
+		
 		self.buildWG(f)
 		i = complex(0,1)
 		eta0 = 120*pi;
@@ -865,7 +871,10 @@ class FEM:
 		b = b.astype(complex)
 
 		start_time = time.time()
-		x = mklsp.solve(K,b,mattype = 3)
+		if(self.mklsp.status == 1):
+			x = self.mklsp.solve(K,b,mattype = 3)
+		else:
+			x=sps.linalg.spsolve(K,b)
 		##print('Time : ',time.time()-start_time)
 		t = time.time()-start_time
 
